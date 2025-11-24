@@ -14,7 +14,7 @@ import androidx.security.crypto.MasterKey; // Updated import
 import java.security.GeneralSecurityException;
 import java.io.IOException;
 
-public class LoginActivity extends AppCompatActivity {
+public class Login_activity extends AppCompatActivity {
 
     private EditText etUsername, etPassword;
     private Button btnLogin;
@@ -62,13 +62,13 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(this::navigateToBooks);
                 } else {
                     runOnUiThread(() ->
-                            Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(Login_activity.this, "Invalid username or password", Toast.LENGTH_SHORT).show()
                     );
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 runOnUiThread(() ->
-                        Toast.makeText(LoginActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(Login_activity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
             } finally {
                 runOnUiThread(() -> setUiEnabled(true));
@@ -105,13 +105,13 @@ public class LoginActivity extends AppCompatActivity {
             // It's better to handle these specific exceptions
             e.printStackTrace();
             runOnUiThread(() ->
-                    Toast.makeText(LoginActivity.this, "Failed to save token securely.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(Login_activity.this, "Failed to save token securely.", Toast.LENGTH_SHORT).show()
             );
         }
     }
 
     private void navigateToBooks() {
-        Intent i = new Intent(this, BooksActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_bg"
+    android:padding="16dp">
+
+    <!-- Back button -->
+    <ImageButton
+        android:id="@+id/backBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_media_previous"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/white"
+        android:background="@drawable/rectangle_border"/>
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/title"
+        style="@style/TitleText"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
+        android:text="Book Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/backBtn"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/rectangle_border"/>
+
+    <!-- Book Cover -->
+    <ImageView
+        android:id="@+id/bookCover"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:contentDescription="book cover"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/rectangle_border"/>
+
+    <!-- Tabs -->
+    <LinearLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/bookCover"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/tabAbout"
+            style="@style/TitleText"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_border"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:text="@string/about_tab"
+            android:textColor="@color/white" />
+
+
+        <TextView
+            android:id="@+id/tabSummary"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:background="@drawable/rectangle_border"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:text="@string/summary_tab"
+            android:textColor="@color/semi_transparent" />
+
+        <TextView
+            android:id="@+id/tabChapters"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/chapters_tab"
+            android:textColor="@color/semi_transparent"
+            android:background="@drawable/rectangle_border"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/infoBlock"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="52dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabs">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rectangle_border"
+                android:gravity="center"
+                android:text="@string/author"
+                android:textColor="@color/semi_transparent" />
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/rectangle_border"
+                android:gravity="center"
+                android:text="author_name"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <!-- Category -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rectangle_border"
+                android:gravity="center"
+                android:text="@string/category"
+                android:textColor="@color/semi_transparent" />
+
+            <TextView
+                android:id="@+id/categoryName"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/rectangle_border"
+                android:gravity="center"
+                android:text="category_name"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <!-- Year -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rectangle_border"
+                android:gravity="center"
+                android:text="@string/year"
+                android:textColor="@color/semi_transparent"/>
+
+            <TextView
+                android:id="@+id/yearName"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/rectangle_border"
+                android:gravity="center"
+                android:text="Year"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

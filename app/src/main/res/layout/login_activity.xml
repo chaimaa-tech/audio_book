@@ -27,9 +27,9 @@
         android:id="@+id/dimOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
-        android:background="@drawable/corner_dark_overlay"
-        android:alpha="0.87"
+        android:background="@color/accent"
+
+        android:alpha="0.64"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

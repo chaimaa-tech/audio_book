@@ -16,6 +16,7 @@
         android:src="@mipmap/ic_login_background"
         android:scaleType="centerCrop"
         android:contentDescription="Background"
+        andrid
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

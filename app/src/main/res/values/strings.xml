@@ -3,4 +3,10 @@
     <string name="book_cover">Book cover</string>
     <string name="book_title_placeholder">Book Title</string>
     <string name="book_author_placeholder">Author</string>
+    <string name="about_tab">About</string>
+    <string name="summary_tab">Summary</string>
+    <string name="chapters_tab">Chapters</string>
+    <string name="author">Author</string>
+    <string name="category">Category</string>
+    <string name="year">Year</string>
 </resources>

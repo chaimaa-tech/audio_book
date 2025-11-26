@@ -12,15 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.audiobookapp.model.Book; // Assuming you have a Book model
-import java.io.Serializable;
+import com.example.audiobookapp.Book;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class chapters extends AppCompatActivity {
 
     private Book currentBook;
-    private List<chapter> chapterList = new ArrayList<>();
+    private List<chap> chapterList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

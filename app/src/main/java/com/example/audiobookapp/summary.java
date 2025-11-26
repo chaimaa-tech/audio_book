@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.audiobookapp.model.Book; // Make sure to import your Book model
+import com.example.audiobookapp.Book; // Make sure to import your Book model
 
 public class summary extends AppCompatActivity {
 
@@ -69,5 +69,4 @@ public class summary extends AppCompatActivity {
     }
 }
 
-    }
-}
+

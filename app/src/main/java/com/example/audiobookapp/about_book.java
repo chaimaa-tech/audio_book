@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.audiobookapp.model.Book;
+import com.example.audiobookapp.Book;
 
 import java.io.Serializable;
 

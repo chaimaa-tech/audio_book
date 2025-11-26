@@ -9,5 +9,5 @@
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#B0B0B0</color>
     <color name="accent">#162827</color>
-
+    <color name="accent_dark">#0F1C1B</color>
 </resources>

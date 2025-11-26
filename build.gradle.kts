@@ -1,5 +1,5 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-
+    // You MUST specify the version and 'apply false' in this file
     alias(libs.plugins.android.application) apply false
+
 }

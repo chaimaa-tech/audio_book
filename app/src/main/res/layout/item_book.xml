@@ -57,3 +57,6 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- This layout defines the appearance of a single book item -->
+    <!-- in the RecyclerView of the main library screen (audio_books.xml). -->
+    <!-- The BookAdapter inflates this layout for each book in the data list. -->

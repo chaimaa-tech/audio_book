@@ -1,48 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_bg"
-    android:padding="16dp">
+    android:background="#1A1A1A"
+    tools:context=".ChapterActivity">
 
-    <!-- Back button -->
+    <!-- Top Toolbar -->
     <ImageButton
-        android:id="@+id/backBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/back_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
         android:src="@android:drawable/ic_media_previous"
-        android:background="@null"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/title"
-        style="@style/TitleText"
-        android:layout_width="328dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/rectangle_border"
-        android:gravity="center"
-        android:text="Book Title"
+    <ImageButton
+        android:id="@+id/more_options_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="More Options"
+        android:src="@android:drawable/ic_menu_more"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/backBtn"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
-    <!-- Book Cover -->
-    <ImageView
-        android:id="@+id/bookCover"
-        android:layout_width="match_parent"
-        android:layout_height="460dp"
-        android:contentDescription="book cover"
-        app:layout_constraintTop_toBottomOf="@id/title"
+    <!-- Book Title (Above Cover) -->
+    <TextView
+        android:id="@+id/book_title_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        android:textColor="@color/white"
+        android:ellipsize="end"
+        android:maxLines="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/rectangle_border"/>
+        app:layout_constraintTop_toBottomOf="@+id/back_button"
+        tools:text="Book Title Here" />
+
+    <!-- Cover Art -->
+    <ImageView
+        android:id="@+id/cover_art_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:contentDescription="Book Cover"
+        android:scaleType="centerCrop"
+        android:src="@color/card_medium"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/book_title_text" />
+
+    <!-- Chapter Title (Below Cover) -->
+    <TextView
+        android:id="@+id/chapter_title_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/white"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cover_art_image"
+        tools:text="Chapter 1: Introduction" />
+
+    <!-- Seek Bar -->
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chapter_title_text" />
+
+    <!-- Current Time -->
+    <TextView
+        android:id="@+id/current_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintStart_toStartOf="@+id/seek_bar"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar"
+        tools:text="01:54" />
+
+    <!-- Remaining Time -->
+    <TextView
+        android:id="@+id/remaining_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_secondary"
+        app:layout_constraintEnd_toEndOf="@+id/seek_bar"
+        app:layout_constraintTop_toBottomOf="@+id/seek_bar"
+        tools:text="-07:37" />
+
+    <!-- Playback Controls -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/play_pause_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:contentDescription="Play/Pause"
+        android:src="@android:drawable/ic_media_play"
+        app:backgroundTint="@color/white"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
+
+    <ImageButton
+        android:id="@+id/rewind_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:contentDescription="Rewind 30 seconds"
+        android:src="@android:drawable/ic_menu_revert"
+        app:layout_constraintBottom_toBottomOf="@+id/play_pause_button"
+        app:layout_constraintEnd_toStartOf="@+id/play_pause_button"
+        app:layout_constraintTop_toTopOf="@+id/play_pause_button"
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/forward_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:contentDescription="Forward 30 seconds"
+        android:src="@android:drawable/ic_media_ff"
+        app:layout_constraintBottom_toBottomOf="@+id/play_pause_button"
+        app:layout_constraintStart_toEndOf="@+id/play_pause_button"
+        app:layout_constraintTop_toTopOf="@+id/play_pause_button"
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/previous_track_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Previous Track"
+        android:src="@android:drawable/ic_media_previous"
+        app:layout_constraintBottom_toBottomOf="@+id/play_pause_button"
+        app:layout_constraintEnd_toStartOf="@+id/rewind_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/play_pause_button"
+        app:tint="@color/white" />
+
+    <ImageButton
+        android:id="@+id/next_track_button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Next Track"
+        android:src="@android:drawable/ic_media_next"
+        app:layout_constraintBottom_toBottomOf="@+id/play_pause_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/forward_button"
+        app:layout_constraintTop_toTopOf="@+id/play_pause_button"
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

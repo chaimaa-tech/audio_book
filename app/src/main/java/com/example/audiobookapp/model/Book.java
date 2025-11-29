@@ -1,6 +1,6 @@
 package com.example.audiobookapp.model;
 
-import com.example.audiobookapp.chapter;
+import com.example.audiobookapp.Chapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,29 +10,24 @@ public class Book implements Serializable {
 
     private String title;
     private String author;
-    private String category;        // e.g., "Adventure", "Romance", "Fantasy"...
+    private String category;
     private int year;
     private String summary;
-    private List<chapter> chapters; // List of chapters (your existing chapter class)
-    private String coverUrl;        // Optional: if you want to load images from URL later
+    private List<Chapter> chapters;
+    private String coverUrl;
 
-    // Required empty constructor for Serializable
     public Book() {
     }
 
-    // Constructor with all fields (recommended)
-    public Book(String title, String author, String category, int year, String summary, List<chapter> chapters) {
+    // THIS CONSTRUCTOR IS NOW CORRECTED
+    public Book(String title, String author, String category, int year, String summary, List<Chapter> chapters) {
         this.title = title;
         this.author = author;
         this.category = category;
         this.year = year;
         this.summary = summary;
-        this.chapters = chapters != null ? chapters : new ArrayList<>();
-    }
-
-    // Constructor without chapters (for quick testing)
-    public Book(String title, String author, String category, int year, String summary) {
-        this(title, author, category, year, summary, new ArrayList<>());
+        // THE FIX: Ensure the passed chapter list is assigned to the Book object.
+        this.chapters = chapters;
     }
 
     // Getters
@@ -41,15 +36,15 @@ public class Book implements Serializable {
     public String getCategory() { return category; }
     public int getYear() { return year; }
     public String getSummary() { return summary; }
-    public List<chapter> getChapters() { return chapters; }
+    public List<Chapter> getChapters() { return chapters; }
     public String getCoverUrl() { return coverUrl; }
 
-    // Setters (optional, useful when loading from JSON/database)
+    // Setters
     public void setTitle(String title) { this.title = title; }
     public void setAuthor(String author) { this.author = author; }
     public void setCategory(String category) { this.category = category; }
     public void setYear(int year) { this.year = year; }
     public void setSummary(String summary) { this.summary = summary; }
-    public void setChapters(List<chapter> chapters) { this.chapters = chapters; }
+    public void setChapters(List<Chapter> chapters) { this.chapters = chapters; }
     public void setCoverUrl(String coverUrl) { this.coverUrl = coverUrl; }
 }

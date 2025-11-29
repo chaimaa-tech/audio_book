@@ -1,20 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/accent"
-    >
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="20dp">
-        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" >
-            <TextView android:text="Formulaire Feedback" android:textSize="24sp" android:textStyle="bold" android:layout_marginBottom="20dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/card_light"/>
-            <EditText android:id="@+id/editNom" android:hint="Nom" android:layout_marginBottom="12dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" android:background="@android:drawable/edit_text"/>
-            <EditText android:id="@+id/editPrenom" android:hint="Prénom" android:layout_marginBottom="12dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" android:background="@android:drawable/edit_text"/>
-            <EditText android:id="@+id/editEmail" android:hint="Email" android:inputType="textEmailAddress" android:layout_marginBottom="12dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" android:background="@android:drawable/edit_text"/>
-            <EditText android:id="@+id/editFeedback" android:hint="Votre feedback" android:layout_marginBottom="12dp" android:minLines="3" android:gravity="top" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" android:background="@android:drawable/edit_text"/>
-            <EditText android:id="@+id/editProblemes" android:hint="Problèmes rencontrés dans l'application" android:minLines="3" android:gravity="top" android:layout_marginBottom="20dp" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" android:background="@android:drawable/edit_text"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Évaluation" android:textColor="@color/card_light" android:textSize="18sp" android:layout_marginBottom="8dp"/>
-            <RatingBar android:id="@+id/ratingBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:numStars="5" android:stepSize="1" android:layout_marginBottom="20dp"/>
-            <Button android:id="@+id/btnSubmit" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Envoyer" android:padding="12dp" android:backgroundTint="@color/accent_dark" android:height="55dp"/>
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/back_arrow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
+        android:src="@android:drawable/ic_menu_revert" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/back_arrow"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="Formulaire Feedback"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editNom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@android:drawable/edit_text"
+                android:hint="Nom"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editPrenom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@android:drawable/edit_text"
+                android:hint="Prénom"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@android:drawable/edit_text"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@android:drawable/edit_text"
+                android:gravity="top"
+                android:hint="Votre feedback"
+                android:minLines="3"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/editProblemes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@android:drawable/edit_text"
+                android:gravity="top"
+                android:hint="Problèmes rencontrés dans l'application"
+                android:minLines="3"
+                android:padding="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Évaluation"
+                android:textSize="18sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:numStars="5"
+                android:stepSize="1" />
+
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/holo_blue_light"
+                android:padding="12dp"
+                android:text="Envoyer" />
         </LinearLayout>
     </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

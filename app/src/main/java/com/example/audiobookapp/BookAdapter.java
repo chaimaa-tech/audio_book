@@ -34,7 +34,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         Book book = bookList.get(position);
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
-        // Load cover image if you have URL, e.g., using Glide: Glide.with(context).load(book.getCoverUrl()).into(holder.ivCover);
+
+        // Set a placeholder image to make the emulator match the preview
+        holder.ivCover.setImageResource(R.mipmap.ic_launcher);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, about_book.class);

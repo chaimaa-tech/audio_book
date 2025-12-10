@@ -2,80 +2,78 @@ package com.example.audiobookapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.audiobookapp.model.Book;
-import com.example.audiobookapp.Chapter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class AudioBooks extends AppCompatActivity {
+
+    private static final String TAG = "AudioBooksActivity";
 
     private RecyclerView rvBooks;
     private BookAdapter bookAdapter;
     private List<Book> allBooks = new ArrayList<>();
     private List<Book> filteredBooks = new ArrayList<>();
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.audio_books);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
-        // Initialize RecyclerView
+        db = FirebaseFirestore.getInstance();
         rvBooks = findViewById(R.id.rv_books);
         rvBooks.setLayoutManager(new GridLayoutManager(this, 2));
-
-        // Load books
-        loadDummyBooks();
-
-        // Set adapter
         bookAdapter = new BookAdapter(this, filteredBooks);
         rvBooks.setAdapter(bookAdapter);
 
-        // --- Setup Buttons ---
+        fetchBooksFromFirestore();
+
         ImageButton actionFilter = findViewById(R.id.action_filter);
         actionFilter.setOnClickListener(v -> showGenreFilter());
 
         ImageButton actionForm = findViewById(R.id.action_form);
         actionForm.setOnClickListener(v -> {
-            // FIX: Changed to launch the correct Formulaire class
             Intent intent = new Intent(AudioBooks.this, Formulaire.class);
             startActivity(intent);
         });
     }
 
-    private void loadDummyBooks() {
+    private void fetchBooksFromFirestore() {
+        Log.d(TAG, "Fetching books from Firestore...");
+        db.collection("Books")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Firestore task successful. Found " + task.getResult().size() + " documents.");
+                        allBooks.clear();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Book book = document.toObject(Book.class);
+                            // FIX: Manually set the document ID on the book object
+                            book.setId(document.getId());
 
-        // (title, author, category, year, summary, chapters)
-        allBooks.add(new Book(
-                "Book 1", "Author 1", "Adventure", 2020, "Summary 1",
-                Arrays.asList(new Chapter("The Adventure Begins", "..."), new Chapter("Into the Woods", "..."))
-        ));
-        allBooks.add(new Book(
-                "Book 2", "Author 2", "Romance", 2021, "Summary 2",
-                Arrays.asList(new Chapter("First Encounter", "..."))
-        ));
-        allBooks.add(new Book(
-                "Book 3", "Author 3", "Fantasy", 2022, "Summary 3",
-                Arrays.asList(new Chapter("The Hidden Kingdom", "..."), new Chapter("A Dragon's Lair", "..."), new Chapter("The Final Battle", "..."))
-        ));
-        filteredBooks.addAll(allBooks);
+                            if (book.getTitle() != null) {
+                                allBooks.add(book);
+                                Log.d(TAG, "\tSUCCESS: Converted book: " + book.getTitle() + " with ID: " + book.getId());
+                            } else {
+                                Log.w(TAG, "\tWARNING: Failed to convert document to Book object. Check fields.");
+                            }
+                        }
+                        applyGenreFilter(new ArrayList<>());
+                    } else {
+                        Log.e(TAG, "Firestore task failed: ", task.getException());
+                    }
+                });
     }
 
     private void showGenreFilter() {
@@ -86,7 +84,7 @@ public class AudioBooks extends AppCompatActivity {
 
     private void applyGenreFilter(List<String> selectedGenres) {
         filteredBooks.clear();
-        if (selectedGenres.isEmpty()) {
+        if (selectedGenres == null || selectedGenres.isEmpty()) {
             filteredBooks.addAll(allBooks);
         } else {
             for (Book book : allBooks) {
@@ -95,6 +93,7 @@ public class AudioBooks extends AppCompatActivity {
                 }
             }
         }
+        Log.d(TAG, "Adapter updated. Final item count: " + filteredBooks.size());
         bookAdapter.notifyDataSetChanged();
     }
 }

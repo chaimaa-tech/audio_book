@@ -12,13 +12,15 @@
     <!-- Top Toolbar -->
     <ImageButton
         android:id="@+id/back_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:padding="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Back"
         android:src="@android:drawable/ic_media_previous"
+        android:onClick="onBackButtonClicked"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />

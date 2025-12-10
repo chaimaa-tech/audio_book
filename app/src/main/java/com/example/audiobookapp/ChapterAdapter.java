@@ -8,40 +8,42 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.audiobookapp.model.Book;
-import com.example.audiobookapp.Chapter;
+import com.example.audiobookapp.model.Chapter;
+
 import java.util.List;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder> {
 
-    private final List<Chapter> chapterList;
-    private final Book currentBook;
+    private Context context;
+    private List<Chapter> chapterList;
+    private Book book; // Add book reference
 
-    public ChapterAdapter(Book book) {
-        this.currentBook = book;
-        this.chapterList = book.getChapters();
+    // FIX: Update constructor to accept the book
+    public ChapterAdapter(Context context, List<Chapter> chapterList, Book book) {
+        this.context = context;
+        this.chapterList = chapterList;
+        this.book = book;
     }
 
     @NonNull
     @Override
     public ChapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chapter, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_chapter, parent, false);
         return new ChapterViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChapterViewHolder holder, int position) {
         Chapter chapter = chapterList.get(position);
-        int chapterNumber = position + 1;
-        String formattedTitle = "Chapter " + chapterNumber + ": " + chapter.getTitle();
-        holder.tvChapterTitle.setText(formattedTitle);
+        holder.chapterTitle.setText(chapter.getTitle());
 
+        // FIX: Pass both the book and the chapter to the player activity
         holder.itemView.setOnClickListener(v -> {
-            Context context = holder.itemView.getContext();
             Intent intent = new Intent(context, ChapterActivity.class);
-            // Pass the entire book and the specific chapter
-            intent.putExtra("book", currentBook);
-            intent.putExtra(ChapterActivity.EXTRA_CHAPTER, chapter);
+            intent.putExtra("book", book);
+            intent.putExtra("chapter", chapter);
             context.startActivity(intent);
         });
     }
@@ -51,12 +53,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
         return chapterList.size();
     }
 
-    public static class ChapterViewHolder extends RecyclerView.ViewHolder {
-        TextView tvChapterTitle;
+    static class ChapterViewHolder extends RecyclerView.ViewHolder {
+        TextView chapterTitle;
 
         public ChapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvChapterTitle = itemView.findViewById(R.id.tv_chapter_title);
+            chapterTitle = itemView.findViewById(R.id.chapter_title);
         }
     }
 }

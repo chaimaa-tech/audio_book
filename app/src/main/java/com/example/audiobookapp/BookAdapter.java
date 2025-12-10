@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.audiobookapp.model.Book;
 import java.util.List;
 
@@ -35,8 +37,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
 
-        // Set a placeholder image to make the emulator match the preview
-        holder.ivCover.setImageResource(R.mipmap.ic_launcher);
+        // Use Glide to load the image from the URL
+        Glide.with(context)
+                .load(book.getCover())
+                .placeholder(R.color.card_medium) // Optional: show a placeholder while loading
+                .error(R.color.card_light)       // Optional: show an error image if it fails
+                .into(holder.ivCover);
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, about_book.class);

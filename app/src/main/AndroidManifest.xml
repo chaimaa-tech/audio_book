@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.audiobookapp">
 
+    <!-- Permissions for Internet & Notifications -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AudioBookApp">
 
-        <!-- Launch Activity -->
+        <!-- Activities -->
         <activity
             android:name=".Login_activity"
             android:exported="true">
@@ -23,13 +27,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Other screens -->
         <activity android:name=".AudioBooks" android:exported="false" />
         <activity android:name=".about_book" android:exported="false" />
         <activity android:name=".summary" android:exported="false" />
-        <activity android:name=".chapters" android:exported="false" />
         <activity android:name=".ChapterActivity" android:exported="false" />
         <activity android:name=".Formulaire" android:exported="false" />
+
+        <!-- FIX: Register the new ChaptersActivity -->
+        <activity android:name=".ChaptersActivity" android:exported="false" />
+
+        <!-- Service Declaration -->
+        <service
+            android:name=".model.DownloadChapterService"
+            android:exported="false" />
 
     </application>
 

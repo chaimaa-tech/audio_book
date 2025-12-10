@@ -1,31 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/page_background"
-    tools:context=".chapters">
-
-    <!-- Main Title for the Chapters Screen -->
-    <TextView
-        android:id="@+id/main_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chapters"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_heading"
-        android:padding="16dp"
-        android:layout_gravity="center_horizontal" />
-
-    <!-- RecyclerView to display the list of chapters -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chaptersList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="8dp"
-        tools:listitem="@layout/item_chapter" />
-
-</LinearLayout>
+    android:layout_height="match_parent" />

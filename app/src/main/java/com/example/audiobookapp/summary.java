@@ -54,7 +54,7 @@ public class summary extends AppCompatActivity {
 
             } else if (id == R.id.tabChapters) {
                 // 5. Navigate to the chapters activity, passing the book data FORWARD
-                intent = new Intent(summary.this, chapters.class); // Use the correct class name
+                intent = new Intent(summary.this, ChaptersActivity.class); // FIX: Use the correct activity
                 intent.putExtra("book", currentBook); // Pass the whole book object
 
             } else {

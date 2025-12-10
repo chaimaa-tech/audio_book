@@ -6,6 +6,10 @@
     <!-- Permissions for Internet & Notifications -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Permission required for foreground services on modern Android -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
 
     <application
         android:allowBackup="true"
@@ -15,7 +19,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AudioBookApp">
+        android:theme="@style/Theme.AudioBookApp"
+        android:usesCleartextTraffic="true">
 
         <!-- Activities -->
         <activity
@@ -30,13 +35,16 @@
         <activity android:name=".AudioBooks" android:exported="false" />
         <activity android:name=".about_book" android:exported="false" />
         <activity android:name=".summary" android:exported="false" />
-        <activity android:name=".ChapterActivity" android:exported="false" />
         <activity android:name=".Formulaire" android:exported="false" />
-
-        <!-- FIX: Register the new ChaptersActivity -->
         <activity android:name=".ChaptersActivity" android:exported="false" />
+        <activity android:name=".ChapterActivity" android:exported="false" />
 
-        <!-- Service Declaration -->
+        <!-- Service Declarations -->
+        <service
+            android:name=".AudioService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
         <service
             android:name=".model.DownloadChapterService"
             android:exported="false" />

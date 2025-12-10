@@ -12,15 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.audiobookapp.model.Book;
 import com.example.audiobookapp.model.Chapter;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterViewHolder> {
 
     private Context context;
     private List<Chapter> chapterList;
-    private Book book; // Add book reference
+    private Book book;
 
-    // FIX: Update constructor to accept the book
     public ChapterAdapter(Context context, List<Chapter> chapterList, Book book) {
         this.context = context;
         this.chapterList = chapterList;
@@ -39,11 +39,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ChapterV
         Chapter chapter = chapterList.get(position);
         holder.chapterTitle.setText(chapter.getTitle());
 
-        // FIX: Pass both the book and the chapter to the player activity
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ChapterActivity.class);
             intent.putExtra("book", book);
-            intent.putExtra("chapter", chapter);
+            // Pass the full list of chapters and the clicked position
+            intent.putExtra("chapters", (Serializable) chapterList);
+            intent.putExtra("position", position);
             context.startActivity(intent);
         });
     }

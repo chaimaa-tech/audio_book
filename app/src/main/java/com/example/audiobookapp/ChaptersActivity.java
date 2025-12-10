@@ -5,19 +5,12 @@ import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.audiobookapp.ChapterAdapter;
 import com.example.audiobookapp.model.Book;
 import com.example.audiobookapp.model.Chapter;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +21,15 @@ public class ChaptersActivity extends AppCompatActivity {
     private RecyclerView chaptersRecyclerView;
     private ChapterAdapter chapterAdapter;
     private List<Chapter> chapterList;
-    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapters);
 
-        db = FirebaseFirestore.getInstance();
         Book book = (Book) getIntent().getSerializableExtra("book");
 
-        if (book == null || book.getId() == null) {
+        if (book == null) { 
             Toast.makeText(this, "Book data is missing.", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -61,34 +52,35 @@ public class ChaptersActivity extends AppCompatActivity {
         chapterAdapter = new ChapterAdapter(this, chapterList, book);
         chaptersRecyclerView.setAdapter(chapterAdapter);
 
-        // --- Fetch Chapters with Real-time Updates ---
-        fetchChaptersInRealTime(book.getId());
+        // --- Load Fake Data ---
+        loadFakeChapterData();
     }
 
-    private void fetchChaptersInRealTime(String bookId) {
-        db.collection("Books").document(bookId).collection("chapters")
-            .orderBy("title") 
-            .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        Toast.makeText(ChaptersActivity.this, "Failed to load chapters. Check Firestore index.", Toast.LENGTH_LONG).show();
-                        return;
-                    }
+    private void loadFakeChapterData() {
+        chapterList.clear();
 
-                    if (snapshots != null) {
-                        chapterList.clear();
-                        for (QueryDocumentSnapshot doc : snapshots) {
-                            Chapter chapter = doc.toObject(Chapter.class);
-                            chapterList.add(chapter);
-                        }
-                        Log.d(TAG, "Chapters updated: " + chapterList.size());
-                        chapterAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d(TAG, "Current data: null");
-                    }
-                }
-            });
+        // Chapter 1: Huckleberry Finn
+        Chapter chapter1 = new Chapter();
+        chapter1.setTitle("Chapter 1: Huckleberry Finn");
+        chapter1.setNumber(1);
+        chapter1.setAudioURL("https://etc.usf.edu/lit2go/audio/mp3/the-adventures-of-huckleberry-finn-001-chapter-i.462.mp3");
+        chapterList.add(chapter1);
+
+        // Chapter 2: The Call of the Wild
+        Chapter chapter2 = new Chapter();
+        chapter2.setTitle("Chapter 1: Into the Primitive");
+        chapter2.setNumber(2);
+        chapter2.setAudioURL("https://etc.usf.edu/lit2go/audio/mp3/the-call-of-the-wild-001-chapter-1-into-the-primitive.986.mp3");
+        chapterList.add(chapter2);
+
+        // Chapter 3: The Scarlet Letter
+        Chapter chapter3 = new Chapter();
+        chapter3.setTitle("The Custom-House: Introductory");
+        chapter3.setNumber(3);
+        chapter3.setAudioURL("https://etc.usf.edu/lit2go/audio/mp3/the-scarlet-letter-001-the-custom-house-introductory.112.mp3");
+        chapterList.add(chapter3);
+
+        Log.d(TAG, "Loaded fake audiobook chapters. Total chapters: " + chapterList.size());
+        chapterAdapter.notifyDataSetChanged();
     }
 }

@@ -9,12 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.audiobookapp.model.Book;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AudioBooks extends AppCompatActivity {
 
@@ -24,20 +21,20 @@ public class AudioBooks extends AppCompatActivity {
     private BookAdapter bookAdapter;
     private List<Book> allBooks = new ArrayList<>();
     private List<Book> filteredBooks = new ArrayList<>();
-    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.audio_books);
 
-        db = FirebaseFirestore.getInstance();
         rvBooks = findViewById(R.id.rv_books);
         rvBooks.setLayoutManager(new GridLayoutManager(this, 2));
+        
+        filteredBooks = new ArrayList<>();
         bookAdapter = new BookAdapter(this, filteredBooks);
         rvBooks.setAdapter(bookAdapter);
 
-        fetchBooksFromFirestore();
+        loadFakeBookData();
 
         ImageButton actionFilter = findViewById(R.id.action_filter);
         actionFilter.setOnClickListener(v -> showGenreFilter());
@@ -49,31 +46,24 @@ public class AudioBooks extends AppCompatActivity {
         });
     }
 
-    private void fetchBooksFromFirestore() {
-        Log.d(TAG, "Fetching books from Firestore...");
-        db.collection("Books")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "Firestore task successful. Found " + task.getResult().size() + " documents.");
-                        allBooks.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Book book = document.toObject(Book.class);
-                            // FIX: Manually set the document ID on the book object
-                            book.setId(document.getId());
+    private void loadFakeBookData() {
+        Log.d(TAG, "Loading fake book data...");
+        allBooks.clear();
 
-                            if (book.getTitle() != null) {
-                                allBooks.add(book);
-                                Log.d(TAG, "\tSUCCESS: Converted book: " + book.getTitle() + " with ID: " + book.getId());
-                            } else {
-                                Log.w(TAG, "\tWARNING: Failed to convert document to Book object. Check fields.");
-                            }
-                        }
-                        applyGenreFilter(new ArrayList<>());
-                    } else {
-                        Log.e(TAG, "Firestore task failed: ", task.getException());
-                    }
-                });
+        Book book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 1925, "A novel about the American dream.", null, "https://covers.openlibrary.org/b/id/8264783-L.jpg");
+        book1.setId("fake1");
+        allBooks.add(book1);
+
+        Book book2 = new Book("To Kill a Mockingbird", "Harper Lee", "Fiction", 1960, "A novel about racial injustice in the American South.", null, "https://covers.openlibrary.org/b/id/1024843-L.jpg");
+        book2.setId("fake2");
+        allBooks.add(book2);
+        
+        Book book3 = new Book("1984", "George Orwell", "Dystopian", 1949, "A novel about a totalitarian future society.", null, "https://covers.openlibrary.org/b/id/8363412-L.jpg");
+        book3.setId("fake3");
+        allBooks.add(book3);
+
+        Log.d(TAG, "Loaded " + allBooks.size() + " fake books.");
+        applyGenreFilter(new ArrayList<>());
     }
 
     private void showGenreFilter() {
@@ -94,6 +84,8 @@ public class AudioBooks extends AppCompatActivity {
             }
         }
         Log.d(TAG, "Adapter updated. Final item count: " + filteredBooks.size());
-        bookAdapter.notifyDataSetChanged();
+        if (bookAdapter != null) {
+            bookAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -1,23 +1,20 @@
 package com.example.audiobookapp.model;
 
-import com.google.firebase.firestore.Exclude;
 import java.io.Serializable;
 import java.util.List;
 
 public class Book implements Serializable {
-    @Exclude // Exclude from Firestore mapping since we set it manually
+    
     public String id;
-
-    // FIX: Fields must be public for Firestore data mapping
     public String title;
     public String author;
     public String category;
     public String summary;
     public int year;
     public List<Chapter> chapters;
-    public String cover; // Added for the cover image URL
+    public String cover;
 
-    // IMPORTANT: A no-argument constructor is required for Firestore data mapping
+    // A no-argument constructor is required for Serializable
     public Book() {}
 
     public Book(String title, String author, String category, int year, String summary, List<Chapter> chapters, String cover) {
@@ -30,8 +27,7 @@ public class Book implements Serializable {
         this.cover = cover;
     }
 
-    // Getter and Setter for the ID
-    @Exclude
+    // Getters and Setters
     public String getId() {
         return id;
     }

@@ -8,14 +8,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.audiobookapp.model.Book;
 import com.example.audiobookapp.model.Chapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class ChapterActivity extends AppCompatActivity {
 
@@ -25,167 +29,157 @@ public class ChapterActivity extends AppCompatActivity {
     private ImageButton seekBackwardButton;
     private ImageButton seekForwardButton;
 
-    private String CHAPTER_URL;
-    private static final int NOTIFICATION_PERMISSION_CODE = 100;   // Constante pour la gestion des permissions
+    private TextView bookTitleTextView;
+    private TextView chapterTitleTextView;
+    private ImageView coverArtImageView;
 
-    private boolean isPlaying = false;  // État local de l'activité
+    private List<Chapter> chapterList;
+    private int currentChapterIndex;
+
+    private boolean isPlaying = false;
+
+    private static final int NOTIFICATION_PERMISSION_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chapter);
 
-        // --- Get Data ---
+        // --- Get Data from Intent ---
         Book book = (Book) getIntent().getSerializableExtra("book");
-        Chapter chapter = (Chapter) getIntent().getSerializableExtra("chapter");
+        chapterList = (List<Chapter>) getIntent().getSerializableExtra("chapters");
+        currentChapterIndex = getIntent().getIntExtra("position", -1);
 
-        if (book == null || chapter == null) {
-            Toast.makeText(this, "Data not found.", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-        // Extraction de l'URL DYNAMIQUE
-        CHAPTER_URL = chapter.getAudioURL(); // FIX: Use the correct getter
-        if (CHAPTER_URL == null || CHAPTER_URL.isEmpty()){
-            Toast.makeText(this, "Erreur: URL audio du chapitre non trouvée.", Toast.LENGTH_LONG).show();
+        if (book == null || chapterList == null || chapterList.isEmpty() || currentChapterIndex == -1) {
+            Toast.makeText(this, "Chapter data not found.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
         // --- Find Views ---
         ImageButton backBtn = findViewById(R.id.back_button);
-        TextView bookTitle = findViewById(R.id.book_title_text);
-        TextView chapterTitle = findViewById(R.id.chapter_title_text);
-
-
-        // --- Populate Views ---
-        bookTitle.setText(book.getTitle());
-        chapterTitle.setText(chapter.getTitle());
-
-        // --- Set Listeners ---
-        backBtn.setOnClickListener(v -> finish());
-
-        //__________Audio Service_________________
-
-        // 1- Audio Service Buttons
-
+        bookTitleTextView = findViewById(R.id.book_title_text);
+        chapterTitleTextView = findViewById(R.id.chapter_title_text);
+        coverArtImageView = findViewById(R.id.cover_art_image);
         playPauseBtn = findViewById(R.id.play_pause_button);
         prevChapterButton = findViewById(R.id.previous_track_button);
         nextChapterButton = findViewById(R.id.next_track_button);
         seekBackwardButton = findViewById(R.id.rewind_button);
         seekForwardButton = findViewById(R.id.forward_button);
 
+        // --- Request Permission ---
+        requestNotificationPermission();
 
-        playPauseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlaying) {
-                    pauseAudioService();
-                    Toast.makeText(ChapterActivity.this, "Lecture mise en pause", Toast.LENGTH_SHORT).show();
-                } else {
-                    startAudioService(CHAPTER_URL);
-                }
-                isPlaying = !isPlaying;
-                updatePlayPauseButton();
-            }
-        });
-        // Navigation (Avancer 10s / Reculer 10s)
-        seekBackwardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlaying) {
-                    seekAudioService(AudioService.ACTION_SEEK_BACKWARD);
-                    Toast.makeText(ChapterActivity.this, "Reculé de 10 secondes", Toast.LENGTH_SHORT).show();
+        // --- Populate Initial UI ---
+        updateChapterUI();
 
-                } else {
-                    Toast.makeText(ChapterActivity.this, "Démarrez d'abord la lecture.", Toast.LENGTH_SHORT).show();
-                }
+        // --- Set Listeners ---
+        backBtn.setOnClickListener(v -> finish());
+
+        playPauseBtn.setOnClickListener(v -> {
+            if (isPlaying) {
+                pauseAudioService();
+            } else {
+                playCurrentChapter();
             }
         });
 
-        seekForwardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isPlaying) {
-                    seekAudioService(AudioService.ACTION_SEEK_FORWARD);
-                    Toast.makeText(ChapterActivity.this, "Avancé de 10 secondes", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ChapterActivity.this, "Démarrez d'abord la lecture.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        nextChapterButton.setOnClickListener(v -> playNextChapter());
+        prevChapterButton.setOnClickListener(v -> playPreviousChapter());
 
-        // Changement de Chapitre
-
-        // Chapitre Précedent
-        prevChapterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                seekAudioService(AudioService.ACTION_PREVIOUS_CHAPTER);
-                isPlaying = false;
-                updatePlayPauseButton();
-                Toast.makeText(ChapterActivity.this, "Chapitre Précédent (Lecture arrêtée)", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        // Chapitre Suivant
-        nextChapterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                seekAudioService(AudioService.ACTION_NEXT_CHAPTER);
-                isPlaying = false;
-                updatePlayPauseButton();
-                Toast.makeText(ChapterActivity.this, "Chapitre Suivant (Lecture arrêtée)", Toast.LENGTH_SHORT).show();
-
-            }
-        });
+        seekForwardButton.setOnClickListener(v -> seekAudioService(AudioService.ACTION_SEEK_FORWARD));
+        seekBackwardButton.setOnClickListener(v -> seekAudioService(AudioService.ACTION_SEEK_BACKWARD));
     }
-    // --- Fonctions de Mise à Jour UI ---
 
-    //Met à jour le texte et la couleur du bouton Play/Pause
-    private void updatePlayPauseButton(){
-        if (isPlaying){
-            playPauseBtn.setImageResource(android.R.drawable.ic_media_pause);
-            playPauseBtn.setContentDescription("Bouton Pause");
-        }
-        else{
-            playPauseBtn.setImageResource(android.R.drawable.ic_media_play);
-            playPauseBtn.setContentDescription("Bouton Play");
+    private void playCurrentChapter() {
+        Chapter chapter = chapterList.get(currentChapterIndex);
+        if (chapter.getAudioURL() != null && !chapter.getAudioURL().isEmpty()) {
+            startAudioService(chapter.getAudioURL());
+            isPlaying = true;
+            updatePlayPauseButton();
+        } else {
+            Toast.makeText(this, "Audio URL is missing.", Toast.LENGTH_SHORT).show();
         }
     }
-    // --- Fonctions d'Envoi des Commandes au Service  ---
-    private void startAudioService(String audioUrl){
-        Intent serviceIntent = new Intent(this, AudioService.class);
-        serviceIntent.setAction(AudioService.ACTION_START_PLAYBACK);
-        serviceIntent.putExtra(AudioService.EXTRA_AUDIO_URL,audioUrl);
 
-        ContextCompat.startForegroundService(this,serviceIntent);
-    }
-
-    private void pauseAudioService(){
+    private void pauseAudioService() {
         Intent serviceIntent = new Intent(this, AudioService.class);
         serviceIntent.setAction(AudioService.ACTION_PAUSE_PLAYBACK);
         startService(serviceIntent);
-    }
-
-    private void stopAudioService(){
-        Intent serviceIntent = new Intent(this, AudioService.class);
-        serviceIntent.setAction(AudioService.ACTION_STOP_PLAYBACK);
-        stopService(serviceIntent);
-
         isPlaying = false;
         updatePlayPauseButton();
     }
 
-    private void seekAudioService(String action){
-        Intent serviceIntent = new Intent(this, AudioService.class);
-        serviceIntent.setAction(action);
-        startService(serviceIntent);
+    private void playNextChapter() {
+        if (currentChapterIndex < chapterList.size() - 1) {
+            currentChapterIndex++;
+            updateChapterUI();
+            playCurrentChapter();
+        } else {
+            Toast.makeText(this, "This is the last chapter.", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // Gestion de Permission
-    // verif
+    private void playPreviousChapter() {
+        if (currentChapterIndex > 0) {
+            currentChapterIndex--;
+            updateChapterUI();
+            playCurrentChapter();
+        } else {
+            Toast.makeText(this, "This is the first chapter.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void updateChapterUI() {
+        Book book = (Book) getIntent().getSerializableExtra("book");
+        Chapter chapter = chapterList.get(currentChapterIndex);
+        bookTitleTextView.setText(book.getTitle());
+        chapterTitleTextView.setText(chapter.getTitle());
+
+        Glide.with(this)
+                .load(book.getCover())
+                .into(coverArtImageView);
+    }
+
+    private void updatePlayPauseButton() {
+        if (isPlaying) {
+            playPauseBtn.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            playPauseBtn.setImageResource(android.R.drawable.ic_media_play);
+        }
+    }
+
+    private void startAudioService(String audioUrl) {
+        Intent serviceIntent = new Intent(this, AudioService.class);
+        serviceIntent.setAction(AudioService.ACTION_START_PLAYBACK);
+        serviceIntent.putExtra(AudioService.EXTRA_AUDIO_URL, audioUrl);
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+
+    private void seekAudioService(String action) {
+        if (isPlaying) {
+            Intent serviceIntent = new Intent(this, AudioService.class);
+            serviceIntent.setAction(action);
+            startService(serviceIntent);
+        } else {
+            Toast.makeText(this, "Start playback first.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // The service will continue to run in the background
+    }
+
+    private void stopAudioService() {
+        Intent serviceIntent = new Intent(this, AudioService.class);
+        stopService(serviceIntent);
+        isPlaying = false;
+        updatePlayPauseButton();
+    }
+
+    // --- Notification Permission Handling ---
     private void requestNotificationPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED){
@@ -193,19 +187,18 @@ public class ChapterActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
-    public void onRequestPermissionsResult( int requestCode, String[] permissions, int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
         super.onRequestPermissionsResult(requestCode, permissions,grantResults);
         if (requestCode == NOTIFICATION_PERMISSION_CODE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("AudioPlayerActivity", "Permission de notification accordée.");
+                Log.d("ChapterActivity", "Notification permission granted.");
             }
             else {
-                Log.w("AudioPlayerActivity", "Permission de notification refusée.");
+                Log.w("ChapterActivity", "Notification permission denied.");
+                Toast.makeText(this, "Notification permission is required for background playback.", Toast.LENGTH_LONG).show();
             }
         }
-
     }
-
-
 }

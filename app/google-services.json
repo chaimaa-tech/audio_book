@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "947486114016",
+    "firebase_url": "https://audiobooks-d10bc-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "audiobooks-d10bc",
+    "storage_bucket": "audiobooks-d10bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947486114016:android:eaa092e239e00afbefd085",
+        "android_client_info": {
+          "package_name": "com.example.audiobookapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVBecSIPax__SlvBaJLWV2lC4D2fN3BKA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
